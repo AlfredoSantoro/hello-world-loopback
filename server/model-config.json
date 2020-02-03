@@ -35,7 +35,12 @@
     "dataSource": "db",
     "public": false
   },
-  "Note": {
-    "dataSource": "db"
+  "people": {
+    "dataSource": "db",
+    "public": true
+  },
+  "phoneNumbers" : {
+    "dataSource" : "db",
+    "public": true
   }
 }
