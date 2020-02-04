@@ -37,7 +37,14 @@
   },
   "people": {
     "dataSource": "db",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "findByName": true
+        }
+      }
+    }
   },
   "phoneNumbers" : {
     "dataSource" : "db",

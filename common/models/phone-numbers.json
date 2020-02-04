@@ -11,8 +11,9 @@
       "required": true
     },
     "number": {
-      "type": "string",
-      "required": true
+      "type": "number",
+      "required": true,
+      "id": true
     },
     "provider": {
       "type": "string",
