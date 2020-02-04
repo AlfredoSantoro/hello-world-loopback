@@ -3,12 +3,12 @@
 const Logger = require('winston');
 
 module.exports = function(People) {
-  People.findByName = function(name, cb) {
-    Logger.info(' get request /find-by-name');
+  People.findByCF = function(cf, cb) {
+    Logger.info(' get request /find-by-fiscal-code');
     People.find(
       {
         where: {
-          name: name,
+          fiscalCode: cf,
         },
       }, function(err, result) {
       if (err) {
@@ -16,7 +16,7 @@ module.exports = function(People) {
         cb(null, err);
         return;
       }
-      Logger.info('callback get request /find-by-name Done..');
+      Logger.info('callback get request /find-by-fiscal-code Done..');
       return cb(null, result);
     }
     );
@@ -70,13 +70,13 @@ module.exports = function(People) {
   };
   /* A remote method is a static method of a model, exposed over a custom REST endpoint */
   People.remoteMethod(
-    'findByName',
+    'findByCF',
     {
       description: 'Find a people by name',
-      http: {path: '/find-by-name', verb: 'get'},
+      http: {path: '/find-by-fiscal-code', verb: 'get'},
       accepts: [
         {
-          arg: 'name',
+          arg: 'cf',
           type: 'string',
           http: {
             source: 'query',
