@@ -4,7 +4,7 @@ const Logger = require('winston');
 
 module.exports = function(People) {
   People.findByName = function(name, cb) {
-    Logger.info('received get request /find-by-name');
+    Logger.info(' get request /find-by-name');
     People.find(
       {
         where: {
@@ -16,13 +16,13 @@ module.exports = function(People) {
         cb(null, err);
         return;
       }
-      Logger.info('get request /find-by-name Done..');
+      Logger.info('callback get request /find-by-name Done..');
       return cb(null, result);
     }
     );
   };
   People.findBySurname = function(surname, cb) {
-    Logger.info('received get request /find-by-surname');
+    Logger.info(' get request /find-by-surname');
     People.find(
       {
         where: {
@@ -34,8 +34,37 @@ module.exports = function(People) {
         cb(null, err);
         return;
       }
-      Logger.info('get request /find-by-surname Done..');
+      Logger.info('callback get request /find-by-surname Done..');
       return cb(null, result);
+    }
+    );
+  };
+  People.findPeopleByPhoneNumbers = function(number, cb) {
+    Logger.info('get request /find-by-phone-number');
+    People.find(
+      {
+        include: {
+          relation: 'phoneNumbers',
+          scope: {
+            where: {number: number},
+          },
+        },
+      }, function(err, result) {
+      if (err) {
+        Logger.info('the following error has occurred: ' + err);
+        cb(null, err);
+        return;
+      }
+      let toReturn = [];
+      result.forEach(function(people) {
+        people = people.toJSON();
+        if (people.phoneNumbers.length > 0) {
+          toReturn.push(people);
+        }
+      });
+      Logger.info(toReturn);
+      Logger.info('callback get request /find-by-phone Done..');
+      return cb(null, toReturn);
     }
     );
   };
@@ -68,6 +97,24 @@ module.exports = function(People) {
         {
           arg: 'surname',
           type: 'string',
+          http: {
+            source: 'query',
+          },
+          required: true,
+        },
+      ],
+      returns: {arg: 'result', type: 'array'},
+    }
+  );
+  People.remoteMethod(
+    'findPeopleByPhoneNumbers',
+    {
+      description: 'Find a people by phone number',
+      http: {path: '/find-by-phone-number', verb: 'get'},
+      accepts: [
+        {
+          arg: 'number',
+          type: 'number',
           http: {
             source: 'query',
           },
